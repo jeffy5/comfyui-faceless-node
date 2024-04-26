@@ -1,0 +1,2 @@
+filetype==1.2.0
+opencv-python==4.9.0.80

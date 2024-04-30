@@ -16,4 +16,5 @@ def is_video(video_path : str) -> bool:
 def get_temp_frames_pattern(target_path : str, temp_frame_prefix : str, format: FrameFormat) -> str:
     return os.path.join(target_path, temp_frame_prefix + '.' + format)
 
-
+def resolve_relative_path(path : str) -> str:
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), path))

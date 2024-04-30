@@ -3,7 +3,7 @@ import folder_paths
 import os
 import shutil
 
-from ..filesystem import is_image, is_video
+from ..filesystem import is_video
 from ..ffmpeg import extract_frames
 from ..vision import detect_video_fps, detect_video_resolution
 from ..typing import FacelessVideo
@@ -20,11 +20,13 @@ class NodesLoadVideo:
                 "trim_frame_start": ("INT", {
                     "default": -1,
                     "min": -1,
+                    "max": 999999,
                     "display": "number",
                 }),
                 "trim_frame_end": ("INT", {
                     "default": -1,
                     "min": -1,
+                    "max": 999999,
                     "display": "number",
                 }),
             },
@@ -44,7 +46,7 @@ class NodesLoadVideo:
     def process(self, video, trim_frame_start: int, trim_frame_end: int):
         video_path = folder_paths.get_annotated_filepath(video)
         video_name, _ = os.path.splitext(os.path.basename(video_path))
-        frames_path = os.path.join(folder_paths.get_temp_directory(), "faceless_frames", video_name)
+        frames_path = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
         print("frames path: " + frames_path)
 
         # Remove all cached frames
@@ -57,7 +59,6 @@ class NodesLoadVideo:
         if video_resolution is None or video_fps is None:
             raise Exception("Failed to detect video resolution and fps")
 
-        # TODO Get trim start, trim end and frame format from options.
         if trim_frame_start == -1:
             final_trim_frame_start = None
         else:
@@ -71,7 +72,9 @@ class NodesLoadVideo:
             raise Exception("Failed to extract frames")
 
         faceless_video: FacelessVideo = {
-            "video_path": video_path,
-            "frames_path": frames_path
+            'video_path': video_path,
+            'output_path': frames_path,
+            'resolution': video_resolution,
+            'fps': video_fps,
         }
         return (faceless_video,)

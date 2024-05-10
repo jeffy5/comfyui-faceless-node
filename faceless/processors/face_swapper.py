@@ -1,6 +1,8 @@
 import os
 import threading
-from typing import Optional, Literal, Any
+from typing import Optional, Literal, Any, List
+from queue import Queue
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import numpy
 import onnx
@@ -21,7 +23,10 @@ face_mask_blur = 0.3
 face_mask_padding = (0, 0, 0, 0)
 face_mask_regions = []
 face_mask_types = ['box']
-face_swapper_model = 'inswapper_128_fp16'
+face_swapper_model = 'inswapper_128'
+
+execution_thread_count = 4
+execution_queue_count = 1
 
 execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
 
@@ -48,7 +53,7 @@ MODELS : ModelSet =\
     {
         'type': 'inswapper',
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128.onnx',
-        'path': resolve_relative_path('../../../models/faceless/inswapper_128.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_swapper/inswapper_128.onnx'),
         'template': 'arcface_128_v2',
         'size': (128, 128),
         'mean': [ 0.0, 0.0, 0.0 ],
@@ -58,7 +63,7 @@ MODELS : ModelSet =\
     {
         'type': 'inswapper',
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128_fp16.onnx',
-        'path': resolve_relative_path('../../../models/faceless/inswapper_128_fp16.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_swapper/inswapper_128_fp16.onnx'),
         'template': 'arcface_128_v2',
         'size': (128, 128),
         'mean': [ 0.0, 0.0, 0.0 ],
@@ -68,7 +73,7 @@ MODELS : ModelSet =\
     {
         'type': 'simswap',
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/simswap_256.onnx',
-        'path': resolve_relative_path('../../../models/faceless/simswap_256.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_swapper/simswap_256.onnx'),
         'template': 'arcface_112_v1',
         'size': (256, 256),
         'mean': [ 0.485, 0.456, 0.406 ],
@@ -150,7 +155,7 @@ def process_images(source_image, target_images, output_frames_path):
             raise Exception("process frame failed")
         write_image(output_filepath, output_vision_frame)
 
-def process_frames(source_image, target_frames_path: str, output_frames_path: str):
+def process_frames(source_image, target_frames_path: str, queue_payloads: List[str], output_frames_path: str):
     source_frame = tensor_to_vision_frame(source_image)
     if source_frame is None:
         raise Exception("cannot read source image")
@@ -158,9 +163,8 @@ def process_frames(source_image, target_frames_path: str, output_frames_path: st
     if source_face is None:
         raise Exception("cannot find source face")
 
-    frames_filenames = os.listdir(target_frames_path)
-    count = len(frames_filenames)
-    for index, frame_filename in enumerate(sorted(frames_filenames)):
+    count = len(queue_payloads)
+    for index, frame_filename in enumerate(queue_payloads):
         print(f"progress: {index + 1}/{count}")
         frame_filepath = os.path.join(target_frames_path, frame_filename)
         output_filepath = os.path.join(output_frames_path, frame_filename)
@@ -172,6 +176,32 @@ def process_frames(source_image, target_frames_path: str, output_frames_path: st
         if output_vision_frame is None:
             raise Exception("process frame failed")
         write_image(output_filepath, output_vision_frame)
+
+def swap_video(source_image, target_frames_path: str, output_frames_path: str):
+    frames_filenames = os.listdir(target_frames_path)
+    queue_payloads = sorted(frames_filenames)
+    with ThreadPoolExecutor(max_workers = execution_thread_count) as executor:
+        futures = []
+        queue : Queue[str] = create_queue(queue_payloads)
+        queue_per_future = max(len(queue_payloads) // execution_thread_count * execution_queue_count, 1)
+        while not queue.empty():
+            future = executor.submit(process_frames, source_image, target_frames_path, pick_queue(queue, queue_per_future), output_frames_path)
+            futures.append(future)
+        for future_done in as_completed(futures):
+            future_done.result()
+
+def create_queue(queue_payloads : List[str]) -> Queue[str]:
+    queue : Queue[str] = Queue()
+    for queue_payload in queue_payloads:
+        queue.put(queue_payload)
+    return queue
+
+def pick_queue(queue : Queue[str], queue_per_future : int) -> List[str]:
+    queues = []
+    for _ in range(queue_per_future):
+        if not queue.empty():
+            queues.append(queue.get())
+    return queues
 
 def apply_swap(source_face : Face, source_vision_frame: VisionFrame, crop_vision_frame : VisionFrame) -> VisionFrame:
     frame_processor = get_frame_processor()

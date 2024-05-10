@@ -1,22 +1,26 @@
-import folder_paths
-
 import os
 import shutil
+import time
+import hashlib
+from urllib.request import urlretrieve
+from urllib.parse import urlparse, unquote
 
-from ..filesystem import is_video
+import folder_paths
+
 from ..ffmpeg import extract_frames
 from ..vision import detect_video_fps, detect_video_resolution
 from ..typing import FacelessVideo
 
-class NodesLoadVideo:
+
+class NodesLoadVideoUrl:
 
     @classmethod
     def INPUT_TYPES(cls):
-        input_dir = folder_paths.get_input_directory()
-        files = [f for f in os.listdir(input_dir) if is_video(os.path.join(input_dir, f))]
         return {
             "required": {
-                "video": (sorted(files),),
+                "url": ("STRING", {
+                    "default": ""
+                }),
                 "trim_frame_start": ("INT", {
                     "default": -1,
                     "min": -1,
@@ -32,20 +36,33 @@ class NodesLoadVideo:
             },
         }
 
-    @classmethod
-    def VALIDATE_INPUTS(cls, video, trim_frame_start: int, trim_frame_end: int):
-        if trim_frame_start != -1 and trim_frame_end != -1 and trim_frame_start >= trim_frame_end:
-            return False
-        return True
-
     CATEGORY = "faceless"
     RETURN_TYPES = ("FACELESS_VIDEO",)
     RETURN_NAMES = ("video",)
-    FUNCTION = "process"
+    FUNCTION = "load_video_url"
 
-    def process(self, video, trim_frame_start: int, trim_frame_end: int):
-        video_path = folder_paths.get_annotated_filepath(video)
-        video_name, _ = os.path.splitext(os.path.basename(video_path))
+    def load_video_url(self, url: str, trim_frame_start: int, trim_frame_end: int):
+        hash = hashlib.md5()
+        hash.update(url.encode('utf-8'))
+        url_id = hash.hexdigest()
+
+        # TODO Get file ext from url
+        video_filepath = os.path.join(folder_paths.get_input_directory(), "faceless/download", f"{url_id}.mp4")
+        if not os.path.exists(video_filepath):
+            # Download video
+            download_temp_filepath = os.path.join(folder_paths.get_temp_directory(), "faceless/download", f"{url_id}.mp4")
+            if not os.path.exists(os.path.dirname(download_temp_filepath)):
+                os.makedirs(os.path.dirname(download_temp_filepath))
+
+            urlretrieve(url, download_temp_filepath)
+
+            if not os.path.exists(os.path.dirname(video_filepath)):
+                os.makedirs(os.path.dirname(video_filepath))
+            shutil.move(download_temp_filepath, video_filepath)
+
+            # Save video
+
+        video_name, _ = os.path.splitext(os.path.basename(video_filepath))
         frames_path = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
         print("frames path: " + frames_path)
 
@@ -54,13 +71,10 @@ class NodesLoadVideo:
             shutil.rmtree(frames_path)
         os.makedirs(frames_path)
 
-        video_resolution = detect_video_resolution(video_path)
-        video_fps = detect_video_fps(video_path)
+        video_resolution = detect_video_resolution(video_filepath)
+        video_fps = detect_video_fps(video_filepath)
         if video_resolution is None or video_fps is None:
             raise Exception("Failed to detect video resolution and fps")
-
-        print("video resolution: " + str(video_resolution))
-        print("video fps: " + str(video_fps))
 
         if trim_frame_start == -1:
             final_trim_frame_start = None
@@ -71,13 +85,14 @@ class NodesLoadVideo:
         else:
             final_trim_frame_end = trim_frame_end
 
-        if not extract_frames(video_path, frames_path, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
+        if not extract_frames(video_filepath, frames_path, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
             raise Exception("Failed to extract frames")
 
         faceless_video: FacelessVideo = {
-            'video_path': video_path,
+            'video_path': video_filepath,
             'output_path': frames_path,
             'resolution': video_resolution,
             'fps': video_fps,
         }
         return (faceless_video,)
+

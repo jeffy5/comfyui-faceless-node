@@ -44,7 +44,7 @@ MODELS : ModelSet =\
     'face_detector_yoloface':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/yoloface_8n.onnx',
-        'path': resolve_relative_path('../../../models/faceless/yoloface_8n.onnx')
+        'path': resolve_relative_path('../../../models/faceless/face_detector/yoloface_8n.onnx')
     },
     'face_detector_yunet':
     {
@@ -54,12 +54,12 @@ MODELS : ModelSet =\
     'face_recognizer_arcface_blendswap':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/arcface_w600k_r50.onnx',
-        'path': resolve_relative_path('../../../models/faceless/arcface_w600k_r50.onnx')
+        'path': resolve_relative_path('../../../models/faceless/face_recognizer/arcface_w600k_r50.onnx')
     },
     'face_recognizer_arcface_inswapper':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/arcface_w600k_r50.onnx',
-        'path': resolve_relative_path('../../../models/faceless/arcface_w600k_r50.onnx')
+        'path': resolve_relative_path('../../../models/faceless/face_recognizer/arcface_w600k_r50.onnx')
     },
     'face_recognizer_arcface_simswap':
     {
@@ -74,12 +74,12 @@ MODELS : ModelSet =\
     'face_landmarker_68':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/2dfan4.onnx',
-        'path': resolve_relative_path('../../../models/faceless/2dfan4.onnx')
+        'path': resolve_relative_path('../../../models/faceless/face_landmarker/2dfan4.onnx')
     },
     'face_landmarker_68_5':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/face_landmarker_68_5.onnx',
-        'path': resolve_relative_path('../../../models/faceless/face_landmarker_68_5.onnx')
+        'path': resolve_relative_path('../../../models/faceless/face_landmarker/face_landmarker_68_5.onnx')
     },
     'gender_age':
     {

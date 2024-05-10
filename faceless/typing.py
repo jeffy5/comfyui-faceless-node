@@ -65,6 +65,7 @@ FaceStore = TypedDict('FaceStore',
 })
 
 
+ModelType = Literal['face_swapper', 'face_detector', 'face_recognizer', 'face_landmarker']
 FaceDetectorModel = Literal['many', 'retinaface', 'scrfd', 'yoloface', 'yunet']
 FaceRecognizerModel = Literal['arcface_blendswap', 'arcface_inswapper', 'arcface_simswap', 'arcface_uniface']
 

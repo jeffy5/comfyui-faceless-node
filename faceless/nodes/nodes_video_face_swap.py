@@ -3,16 +3,24 @@ import shutil
 
 import folder_paths
 
-from ..processors.face_swapper import process_frames
+from ..processors.face_swapper import swap_video
+from ..filesystem import get_face_detector_models, get_face_recognizer_models, get_face_swapper_models
 from ..typing import FacelessVideo
 
 class NodesVideoFaceSwap:
     @classmethod
     def INPUT_TYPES(cls):
+        swapper_models = [os.path.basename(model) for model in get_face_swapper_models()]
+        detector_models = [os.path.basename(model) for model in get_face_detector_models()]
+        recognizer_models = [os.path.basename(model) for model in get_face_recognizer_models()]
+
         return {
             "required": {
                 "source_image": ("IMAGE",),
                 "target_video": ("FACELESS_VIDEO",),
+                "swapper_model": (swapper_models,),
+                "detector_model": (detector_models,),
+                "recognizer_model": (recognizer_models,),
             },
         }
 
@@ -20,9 +28,9 @@ class NodesVideoFaceSwap:
     RETURN_TYPES = ()
     RETURN_TYPES = ("FACELESS_VIDEO",)
     RETURN_NAMES = ("video",)
-    FUNCTION = "swapVideoFace"
+    FUNCTION = "swap_video_face"
 
-    def swapVideoFace(self, source_image, target_video: FacelessVideo):
+    def swap_video_face(self, source_image, target_video: FacelessVideo, swapper_model, detector_model, recognizer_model):
         video_path = target_video.get("video_path")
         video_name, _ = os.path.splitext(os.path.basename(video_path))
 
@@ -35,9 +43,8 @@ class NodesVideoFaceSwap:
 
         # TODO Check if has face on source image
 
-        print("source image", len(source_image))
         # Fetch source image or change process_frames argument.
-        process_frames(source_image[0], frames_path, output_path)
+        swap_video(source_image[0], frames_path, output_path)
 
         target_video['output_path'] = output_path
         return (target_video,)

@@ -27,11 +27,10 @@ app.registerExtension({
   async beforeRegisterNodeDef(nodeType, nodeData, app) {
     if (nodeData.name === "FacelessLoadVideo") {
       const cb = nodeType.prototype.onNodeCreated;
-      if (!cb) {
-        return;
-      }
       nodeType.prototype.onNodeCreated = function() {
-        cb.apply(this, arguments)
+        if (!!cb) {
+          cb.apply(this, arguments)
+        }
 
         const videoWidget = this.widgets.find(name => name.name === "video");
         console.log("widgets", this, this.widgets, videoWidget)

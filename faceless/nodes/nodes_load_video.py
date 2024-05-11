@@ -79,5 +79,7 @@ class NodesLoadVideo:
             'output_path': frames_path,
             'resolution': video_resolution,
             'fps': video_fps,
+            'trim_frame_start': final_trim_frame_start,
+            'trim_frame_end': final_trim_frame_end,
         }
         return (faceless_video,)

@@ -1,4 +1,4 @@
-from typing import Literal, Tuple, TypedDict, Any, Dict, List
+from typing import Literal, Tuple, TypedDict, Any, Dict, List, Optional
 from collections import namedtuple
 
 import numpy
@@ -42,6 +42,8 @@ FacelessVideo = TypedDict('FacelessVideo', {
     'output_path': str,
     'resolution': Resolution,
     'fps': Fps,
+    'trim_frame_start': Optional[int],
+    'trim_frame_end': Optional[int],
 })
 
 Embedding = numpy.ndarray[Any, Any]

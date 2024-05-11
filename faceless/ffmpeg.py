@@ -63,6 +63,18 @@ def merge_video(target_path: str, output_path: str, video_resolution: Resolution
     commands.extend([ '-vf', 'framerate=fps=' + str(video_fps), '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path ])
     return run_ffmpeg(commands)
 
+def restore_audio(video_path: str, audio_path: str, output_path: str, output_video_fps: Fps, trim_frame_start: Optional[int] = None, trim_frame_end: Optional[int] = None) -> bool:
+    commands = [ '-hwaccel', 'auto', '-i', video_path ]
+
+    if trim_frame_start is not None:
+        start_time = trim_frame_start / output_video_fps
+        commands.extend([ '-ss', str(start_time) ])
+    if trim_frame_end is not None:
+        end_time = trim_frame_end / output_video_fps
+        commands.extend([ '-to', str(end_time) ])
+    commands.extend([ '-i', audio_path, '-c', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-shortest', '-y', output_path ])
+    return run_ffmpeg(commands)
+
 def map_amf_preset(output_video_preset : OutputVideoPreset) -> str:
     if output_video_preset in [ 'ultrafast', 'superfast', 'veryfast' ]:
         return 'speed'

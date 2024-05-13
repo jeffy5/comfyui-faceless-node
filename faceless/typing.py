@@ -38,7 +38,11 @@ Translation = numpy.ndarray[Any, Any]
 FrameFormat = Literal['jpg', 'png', 'bmp']
 
 FacelessVideo = TypedDict('FacelessVideo', {
+    # raw vidoe file path
     'video_path': str,
+    # frames dir
+    'frames_dir': str,
+    # output vidoe file path
     'output_path': str,
     'resolution': Resolution,
     'fps': Fps,

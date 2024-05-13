@@ -155,7 +155,7 @@ def process_images(source_image, target_images, output_frames_path):
             raise Exception("process frame failed")
         write_image(output_filepath, output_vision_frame)
 
-def process_frames(source_image, target_frames_path: str, queue_payloads: List[str], output_frames_path: str):
+def process_frames(source_image, target_frames_dir: str, queue_payloads: List[str]):
     source_frame = tensor_to_vision_frame(source_image)
     if source_frame is None:
         raise Exception("cannot read source image")
@@ -166,8 +166,7 @@ def process_frames(source_image, target_frames_path: str, queue_payloads: List[s
     count = len(queue_payloads)
     for index, frame_filename in enumerate(queue_payloads):
         print(f"progress: {index + 1}/{count}")
-        frame_filepath = os.path.join(target_frames_path, frame_filename)
-        output_filepath = os.path.join(output_frames_path, frame_filename)
+        frame_filepath = os.path.join(target_frames_dir, frame_filename)
 
         target_vision_frame = read_image(frame_filepath)
         if target_vision_frame is None:
@@ -175,17 +174,17 @@ def process_frames(source_image, target_frames_path: str, queue_payloads: List[s
         output_vision_frame = process_frame(source_face, source_frame, target_vision_frame)
         if output_vision_frame is None:
             raise Exception("process frame failed")
-        write_image(output_filepath, output_vision_frame)
+        write_image(frame_filepath, output_vision_frame)
 
-def swap_video(source_image, target_frames_path: str, output_frames_path: str):
-    frames_filenames = os.listdir(target_frames_path)
+def swap_video(source_image, target_frames_dir: str):
+    frames_filenames = os.listdir(target_frames_dir)
     queue_payloads = sorted(frames_filenames)
     with ThreadPoolExecutor(max_workers = execution_thread_count) as executor:
         futures = []
         queue : Queue[str] = create_queue(queue_payloads)
         queue_per_future = max(len(queue_payloads) // execution_thread_count * execution_queue_count, 1)
         while not queue.empty():
-            future = executor.submit(process_frames, source_image, target_frames_path, pick_queue(queue, queue_per_future), output_frames_path)
+            future = executor.submit(process_frames, source_image, target_frames_dir, pick_queue(queue, queue_per_future))
             futures.append(future)
         for future_done in as_completed(futures):
             future_done.result()

@@ -63,13 +63,13 @@ class NodesLoadVideoUrl:
             # Save video
 
         video_name, _ = os.path.splitext(os.path.basename(video_filepath))
-        frames_path = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
-        print("frames path: " + frames_path)
+        frames_dir = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
+        print("frames path: " + frames_dir)
 
         # Remove all cached frames
-        if os.path.exists(frames_path):
-            shutil.rmtree(frames_path)
-        os.makedirs(frames_path)
+        if os.path.exists(frames_dir):
+            shutil.rmtree(frames_dir)
+        os.makedirs(frames_dir)
 
         video_resolution = detect_video_resolution(video_filepath)
         video_fps = detect_video_fps(video_filepath)
@@ -85,16 +85,17 @@ class NodesLoadVideoUrl:
         else:
             final_trim_frame_end = trim_frame_end
 
-        if not extract_frames(video_filepath, frames_path, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
+        if not extract_frames(video_filepath, frames_dir, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
             raise Exception("Failed to extract frames")
 
         faceless_video: FacelessVideo = {
-            'video_path': video_filepath,
-            'output_path': frames_path,
-            'resolution': video_resolution,
-            'fps': video_fps,
-            'trim_frame_start': final_trim_frame_start,
-            'trim_frame_end': final_trim_frame_end,
+            "video_path": video_filepath,
+            "frames_dir": frames_dir,
+            "output_path": "",
+            "resolution": video_resolution,
+            "fps": video_fps,
+            "trim_frame_start": final_trim_frame_start,
+            "trim_frame_end": final_trim_frame_end,
         }
         return (faceless_video,)
 

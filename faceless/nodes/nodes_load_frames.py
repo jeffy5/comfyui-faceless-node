@@ -21,7 +21,7 @@ class NodesLoadFrames:
     FUNCTION = "load_frames"
 
     def load_frames(self, video: FacelessVideo):
-        frames_path = video['output_path']
+        frames_path = video["frames_dir"]
 
         images = []
         for file in sorted(os.listdir(frames_path)):

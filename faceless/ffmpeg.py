@@ -43,9 +43,9 @@ def extract_frames(video_path: str, frames_path: str, video_resolution : Resolut
     commands.extend([ '-vsync', '0', temp_frames_pattern ])
     return run_ffmpeg(commands)
 
-def merge_video(target_path: str, output_path: str, video_resolution: Resolution, video_fps: Fps, output_video_encoder: OutputVideoEncoder = 'libx264', output_video_quality: int = 80, output_video_preset: OutputVideoPreset = 'veryfast', frame_format: FrameFormat = 'png') -> bool:
-    temp_video_fps = restrict_video_fps(target_path, video_fps)
-    temp_frames_pattern = get_temp_frames_pattern(target_path, '%04d', frame_format)
+def merge_video(video_path: str, frames_dir: str, output_path: str, video_resolution: Resolution, video_fps: Fps, output_video_encoder: OutputVideoEncoder = 'libx264', output_video_quality: int = 80, output_video_preset: OutputVideoPreset = 'veryfast', frame_format: FrameFormat = 'png') -> bool:
+    temp_video_fps = restrict_video_fps(video_path, video_fps)
+    temp_frames_pattern = get_temp_frames_pattern(frames_dir, '%04d', frame_format)
     commands = [ '-hwaccel', 'auto', '-s', pack_resolution(video_resolution), '-r', str(temp_video_fps), '-i', temp_frames_pattern, '-c:v', output_video_encoder ]
 
     if output_video_encoder in [ 'libx264', 'libx265' ]:

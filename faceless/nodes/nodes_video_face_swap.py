@@ -31,20 +31,10 @@ class NodesVideoFaceSwap:
     FUNCTION = "swap_video_face"
 
     def swap_video_face(self, source_image, target_video: FacelessVideo, swapper_model, detector_model, recognizer_model):
-        video_path = target_video.get("video_path")
-        video_name, _ = os.path.splitext(os.path.basename(video_path))
-
-        frames_path = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
-        output_path = os.path.join(folder_paths.get_temp_directory(), "faceless/swapped_frames", video_name)
-
-        if os.path.exists(output_path):
-            shutil.rmtree(output_path)
-        os.makedirs(output_path)
+        frames_path = target_video["frames_dir"]
 
         # TODO Check if has face on source image
 
         # Fetch source image or change process_frames argument.
-        swap_video(source_image[0], frames_path, output_path)
-
-        target_video['output_path'] = output_path
+        swap_video(source_image[0], frames_path)
         return (target_video,)

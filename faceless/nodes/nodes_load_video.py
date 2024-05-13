@@ -75,11 +75,12 @@ class NodesLoadVideo:
             raise Exception("Failed to extract frames")
 
         faceless_video: FacelessVideo = {
-            'video_path': video_path,
-            'output_path': frames_path,
-            'resolution': video_resolution,
-            'fps': video_fps,
-            'trim_frame_start': final_trim_frame_start,
-            'trim_frame_end': final_trim_frame_end,
+            "video_path": video_path,
+            "frames_dir": frames_path,
+            "output_path": "",
+            "resolution": video_resolution,
+            "fps": video_fps,
+            "trim_frame_start": final_trim_frame_start,
+            "trim_frame_end": final_trim_frame_end,
         }
         return (faceless_video,)

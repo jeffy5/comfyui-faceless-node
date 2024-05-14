@@ -4,7 +4,6 @@ from PIL import Image
 from ..vision import is_image
 from ..typing import FacelessVideo
 from .nodes_remove_background import NodesRemoveBackground
-import torch.multiprocessing as mp
 
 class NodesVideoRemoveBackground(NodesRemoveBackground):
 

@@ -1,7 +1,4 @@
 import os
-import shutil
-
-import folder_paths
 
 from ..processors.face_swapper import swap_video
 from ..filesystem import get_face_detector_models, get_face_recognizer_models, get_face_swapper_models
@@ -31,6 +28,8 @@ class NodesVideoFaceSwap:
     FUNCTION = "swap_video_face"
 
     def swap_video_face(self, source_image, target_video: FacelessVideo, swapper_model, detector_model, recognizer_model):
+        if not target_video["extract_frames"]:
+            raise Exception("target video must be extracted frames")
         frames_path = target_video["frames_dir"]
 
         # TODO Check if has face on source image

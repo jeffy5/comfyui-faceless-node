@@ -3,6 +3,7 @@ from .nodes_load_video_url import NodesLoadVideoUrl
 from .nodes_load_image_url import NodesLoadImageUrl
 from .nodes_load_frames import NodesLoadFrames
 from .nodes_save_video import NodesSaveVideo
+from .nodes_merge_videos import NodesMergeVideos
 from .nodes_upload_video import NodesUploadVideo
 
 from .nodes_face_swap import NodesFaceSwap
@@ -15,9 +16,10 @@ from .nodes_video_remove_background import NodesVideoRemoveBackground
 NODE_CLASS_MAPPINGS = {
     "FacelessLoadVideo": NodesLoadVideo,
     "FacelessLoadFrames": NodesLoadFrames,
-    "FacelessSaveVideo": NodesSaveVideo,
     "FacelessLoadImageUrl": NodesLoadImageUrl,
     "FacelessLoadVideoUrl": NodesLoadVideoUrl,
+    "FacelessMergeVideos": NodesMergeVideos,
+    "FacelessSaveVideo": NodesSaveVideo,
     "FacelessUploadVideo": NodesUploadVideo,
 
     "FacelessFaceSwap": NodesFaceSwap,
@@ -32,9 +34,10 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "FacelessLoadVideo": "Load Video",
     "FacelessLoadFrames": "Load Frames",
-    "FacelessSaveVideo": "Save Video",
     "FacelessLoadImageUrl": "Load Image (Url)",
     "FacelessLoadVideoUrl": "Load Video (Url)",
+    "FacelessMergeVideos": "Merge Videos",
+    "FacelessSaveVideo": "Save Video",
     "FacelessUploadVideo": "Upload Video",
 
     "FacelessFaceSwap": "Face Swap",

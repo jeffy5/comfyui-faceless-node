@@ -21,6 +21,8 @@ class NodesLoadFrames:
     FUNCTION = "load_frames"
 
     def load_frames(self, video: FacelessVideo):
+        if not video["extract_frames"]:
+            raise Exception("Cannot load frames without extracting frames first")
         frames_path = video["frames_dir"]
 
         images = []

@@ -40,7 +40,8 @@ FrameFormat = Literal['jpg', 'png', 'bmp']
 FacelessVideo = TypedDict('FacelessVideo', {
     # raw vidoe file path
     'video_path': str,
-    # frames dir
+    # frames
+    'extract_frames': bool,
     'frames_dir': str,
     # output vidoe file path
     'output_path': str,

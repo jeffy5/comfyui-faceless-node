@@ -1,13 +1,11 @@
 import os
 import shutil
-import time
 import hashlib
 from urllib.request import urlretrieve
-from urllib.parse import urlparse, unquote
 
 import folder_paths
 
-from ..ffmpeg import extract_frames
+from ..ffmpeg import extract_frames as process_extract_frames
 from ..vision import detect_video_fps, detect_video_resolution
 from ..typing import FacelessVideo
 
@@ -20,6 +18,11 @@ class NodesLoadVideoUrl:
             "required": {
                 "url": ("STRING", {
                     "default": ""
+                }),
+                "extract_frames": ("BOOLEAN", {
+                    "default": True,
+                    "label_off": "OFF",
+                    "label_on": "ON",
                 }),
                 "trim_frame_start": ("INT", {
                     "default": -1,
@@ -41,7 +44,7 @@ class NodesLoadVideoUrl:
     RETURN_NAMES = ("video",)
     FUNCTION = "load_video_url"
 
-    def load_video_url(self, url: str, trim_frame_start: int, trim_frame_end: int):
+    def load_video_url(self, url: str, extract_frames: bool, trim_frame_start: int, trim_frame_end: int):
         hash = hashlib.md5()
         hash.update(url.encode('utf-8'))
         url_id = hash.hexdigest()
@@ -63,13 +66,7 @@ class NodesLoadVideoUrl:
             # Save video
 
         video_name, _ = os.path.splitext(os.path.basename(video_filepath))
-        frames_dir = os.path.join(folder_paths.get_temp_directory(), "faceless/frames", video_name)
-        print("frames path: " + frames_dir)
-
-        # Remove all cached frames
-        if os.path.exists(frames_dir):
-            shutil.rmtree(frames_dir)
-        os.makedirs(frames_dir)
+        frames_dir = os.path.join(folder_paths.get_temp_directory(), "faceless", video_name, "frames")
 
         video_resolution = detect_video_resolution(video_filepath)
         video_fps = detect_video_fps(video_filepath)
@@ -85,11 +82,18 @@ class NodesLoadVideoUrl:
         else:
             final_trim_frame_end = trim_frame_end
 
-        if not extract_frames(video_filepath, frames_dir, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
-            raise Exception("Failed to extract frames")
+        if extract_frames:
+            # Remove all cached frames
+            if os.path.exists(frames_dir):
+                shutil.rmtree(frames_dir)
+            os.makedirs(frames_dir)
+
+            if not process_extract_frames(video_filepath, frames_dir, video_resolution, video_fps, final_trim_frame_start, final_trim_frame_end):
+                raise Exception("Failed to extract frames")
 
         faceless_video: FacelessVideo = {
             "video_path": video_filepath,
+            "extract_frames": extract_frames,
             "frames_dir": frames_dir,
             "output_path": "",
             "resolution": video_resolution,

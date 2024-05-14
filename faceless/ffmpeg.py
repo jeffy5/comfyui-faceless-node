@@ -43,7 +43,7 @@ def extract_frames(video_path: str, frames_path: str, video_resolution : Resolut
     commands.extend([ '-vsync', '0', temp_frames_pattern ])
     return run_ffmpeg(commands)
 
-def merge_video(video_path: str, frames_dir: str, output_path: str, video_resolution: Resolution, video_fps: Fps, output_video_encoder: OutputVideoEncoder = 'libx264', output_video_quality: int = 80, output_video_preset: OutputVideoPreset = 'veryfast', frame_format: FrameFormat = 'png') -> bool:
+def merge_frames(video_path: str, frames_dir: str, output_path: str, video_resolution: Resolution, video_fps: Fps, output_video_encoder: OutputVideoEncoder = 'libx264', output_video_quality: int = 80, output_video_preset: OutputVideoPreset = 'veryfast', frame_format: FrameFormat = 'png') -> bool:
     temp_video_fps = restrict_video_fps(video_path, video_fps)
     temp_frames_pattern = get_temp_frames_pattern(frames_dir, '%04d', frame_format)
     commands = [ '-hwaccel', 'auto', '-s', pack_resolution(video_resolution), '-r', str(temp_video_fps), '-i', temp_frames_pattern, '-c:v', output_video_encoder ]
@@ -60,7 +60,41 @@ def merge_video(video_path: str, frames_dir: str, output_path: str, video_resolu
     if output_video_encoder in [ 'h264_amf', 'hevc_amf' ]:
         output_video_compression = round(51 - (output_video_quality * 0.51))
         commands.extend([ '-qp_i', str(output_video_compression), '-qp_p', str(output_video_compression), '-quality', map_amf_preset(output_video_preset) ])
-    commands.extend([ '-vf', 'framerate=fps=' + str(video_fps), '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path ])
+    commands.extend([ '-vf', 'format=rgba,framerate=fps=' + str(video_fps), '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path ])
+    return run_ffmpeg(commands)
+
+# ffmpeg -i ~/Downloads/temp/bg.mp4 -framerate 30 -i %04d.png -filter_complex "[0:v]scale=528:960:force_original_aspect_ratio=increase,crop=528:960[bg];[1:v]format=rgba[overlay];[bg][overlay]overlay=shortest=1" -pix_fmt yuv420p -c:a copy output_final.mp4
+def merge_frames_and_bg_video(video_path: str, bg_video_path: str, frames_dir: str, output_path: str, video_resolution: Resolution, video_fps: Fps, output_video_encoder: OutputVideoEncoder = 'libx264', output_video_quality: int = 80, output_video_preset: OutputVideoPreset = 'veryfast', frame_format: FrameFormat = 'png'):
+    temp_video_fps = restrict_video_fps(video_path, video_fps)
+    temp_frames_pattern = get_temp_frames_pattern(frames_dir, '%04d', frame_format)
+    video_resolution[0]
+    commands = [ '-hwaccel', 'auto', '-r', str(temp_video_fps), '-i', bg_video_path, '-i', temp_frames_pattern, '-c:v', output_video_encoder ]
+
+    width = video_resolution[0]
+    height = video_resolution[1]
+    commands.extend(["-filter_complex", f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}[bg];[1:v]format=rgba[overlay];[bg][overlay]overlay=shortest=1"])
+
+    if output_video_encoder in [ 'libx264', 'libx265' ]:
+        output_video_compression = round(51 - (output_video_quality * 0.51))
+        commands.extend([ '-crf', str(output_video_compression), '-preset', output_video_preset ])
+    if output_video_encoder in [ 'libvpx-vp9' ]:
+        output_video_compression = round(63 - (output_video_quality * 0.63))
+        commands.extend([ '-crf', str(output_video_compression) ])
+    if output_video_encoder in [ 'h264_nvenc', 'hevc_nvenc' ]:
+        output_video_compression = round(51 - (output_video_quality * 0.51))
+        commands.extend([ '-cq', str(output_video_compression), '-preset', output_video_preset ])
+    if output_video_encoder in [ 'h264_amf', 'hevc_amf' ]:
+        output_video_compression = round(51 - (output_video_quality * 0.51))
+        commands.extend([ '-qp_i', str(output_video_compression), '-qp_p', str(output_video_compression), '-quality', map_amf_preset(output_video_preset) ])
+    commands.extend(['-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path])
+    return run_ffmpeg(commands)
+
+# ffmpeg -i bg.mp4 -i fg.mov -filter_complex "[0:v]scale=528:960:force_original_aspect_ratio=increase,crop=528:960[bg];[1:v]scale=528:960:force_original_aspect_ratio=increase,crop=528:960[fg];[bg][fg]overlay=shortest=1" -c:a copy output_final.mp4
+def merge_videos(fg_video_path: str, bg_video_path: str, output_path: str, resolution: Resolution):
+    width = resolution[0]
+    height = resolution[1]
+    filter_complex = f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}[bg];[1:v]scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}[fg];[bg][fg]overlay=shortest=1"
+    commands = ["-i", bg_video_path, "-i", fg_video_path, "-filter_complex", filter_complex, "-c:a", "copy", "-y", output_path]
     return run_ffmpeg(commands)
 
 def restore_audio(video_path: str, audio_path: str, output_path: str, output_video_fps: Fps, trim_frame_start: Optional[int] = None, trim_frame_end: Optional[int] = None) -> bool:

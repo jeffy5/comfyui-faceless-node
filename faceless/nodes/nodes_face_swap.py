@@ -25,9 +25,9 @@ class NodesFaceSwap:
     RETURN_TYPES = ()
     RETURN_TYPES = ("IMAGE",)
     RETURN_NAMES = ("IMAGE",)
-    FUNCTION = "swapFace"
+    FUNCTION = "swap_face"
 
-    def swapFace(self, source_image, target_images):
+    def swap_face(self, source_image, target_images):
         now = f"{int(time.time())}"
         output_path = os.path.join(folder_paths.get_temp_directory(), "faceless/swapped_frames", now)
         if os.path.exists(output_path):

@@ -47,8 +47,12 @@ class NodesRemoveBackground:
             processed_images.append(new_im_tensor)
             processed_masks.append(pil_im_tensor)
 
-        new_ims = torch.cat(processed_images, dim=0)
-        new_masks = torch.cat(processed_masks, dim=0)
+        if len(processed_images) > 1:
+            new_ims = torch.cat(processed_images, dim=0)
+            new_masks = torch.cat(processed_masks, dim=0)
+        else:
+            new_ims = processed_images[0]
+            new_masks = processed_masks[0]
         return (new_ims, new_masks)
 
     def remove_background(self, orig_image):

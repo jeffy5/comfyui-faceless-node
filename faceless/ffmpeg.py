@@ -106,7 +106,7 @@ def restore_audio(video_path: str, audio_path: str, output_path: str, output_vid
     if trim_frame_end is not None:
         end_time = trim_frame_end / output_video_fps
         commands.extend([ '-to', str(end_time) ])
-    commands.extend([ '-i', audio_path, '-c', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-shortest', '-y', output_path ])
+    commands.extend([ '-i', audio_path, '-c', 'copy', '-map', '0:v:0', '-map', '1:a?:0', '-shortest', '-y', output_path ])
     return run_ffmpeg(commands)
 
 def map_amf_preset(output_video_preset : OutputVideoPreset) -> str:

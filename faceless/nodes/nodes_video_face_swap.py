@@ -30,10 +30,10 @@ class NodesVideoFaceSwap:
     def swap_video_face(self, source_image, target_video: FacelessVideo, swapper_model, detector_model, recognizer_model):
         if not target_video["extract_frames"]:
             raise Exception("target video must be extracted frames")
-        frames_path = target_video["frames_dir"]
+        frames_dir = target_video["frames_dir"]
 
         # TODO Check if has face on source image
 
         # Fetch source image or change process_frames argument.
-        swap_video(source_image[0], frames_path)
+        swap_video(source_image[0], frames_dir)
         return (target_video,)

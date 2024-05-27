@@ -1,3 +1,7 @@
+from ..typing import FacelessVideo
+
+from ..processors.face_enhancer import enhance_video
+
 class NodesVideoFaceRestore:
     @classmethod
     def INPUT_TYPES(cls):
@@ -14,5 +18,6 @@ class NodesVideoFaceRestore:
     FUNCTION = "restoreVideoFace"
 
     def restoreVideoFace(self, video):
-        print("video face restore" + video.video_path + " " + video.frames_path)
+        frames_dir = video["frames_dir"]
+        enhance_video(frames_dir)
         return (video,)

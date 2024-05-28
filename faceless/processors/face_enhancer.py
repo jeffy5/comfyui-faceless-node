@@ -152,7 +152,8 @@ def process_frames(target_frames_dir: str, queue_payloads: List[str]):
             raise Exception("invalid target image")
         output_vision_frame = process_frame(target_vision_frame)
         if output_vision_frame is None:
-            raise Exception("process frame failed")
+            continue
+            # raise Exception("process frame failed")
         write_image(frame_filepath, output_vision_frame)
 
 def enhance_video(frames_dir: str):

@@ -32,6 +32,7 @@ class NodesRemoveBackground:
         return True
 
     def remove_images_background(self, images):
+        # Laod model first
         self.load_model()
 
         processed_images = []

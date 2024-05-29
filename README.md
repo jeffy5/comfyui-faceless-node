@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 ### Download model
 
-All models is same as [facefusion](https://github.com/facefusion/facefusion) which can be found in [facefusion assets](https://github.com/facefusion/facefusion-assets).
+All models is same as facefusion which can be found in [facefusion assets](https://github.com/facefusion/facefusion-assets).
 
 Now it will use the following model by default. In the future, dynamic model selection will be supported. Please download the model based on the following directory structure.
 
@@ -29,11 +29,22 @@ Put all into directory `CmofyUI/models/faceless`.
 |   `-- face_landmarker_68_5.onnx
 |-- face_recognizer
 |   `-- arcface_w600k_r50.onnx
+├── face_restoration
+│   └── gfpgan_1.4.onnx
 |-- face_swapper
-|   |-- inswapper_128.onnx
-|   `-- inswapper_128_fp16.onnx
+|   └── inswapper_128.onnx
 |-- gender_age.onnx
 `-- rmbg.pth
+```
+
+You can download models by running `download_models.py` script under directory `CmofyUI/custom_nodes/comfyui-faceless-node`.
+
+```bash
+# Install required models
+python download_models.py
+
+# Install all models
+python download_models.py --all
 ```
 
 ## Example workflows
@@ -52,6 +63,6 @@ Put all into directory `CmofyUI/models/faceless`.
 
 It doesn't support preview video for now. All video will be save in directory `output/faceless`.
 
-## Thanks and Credits
+## Thanks
 
 Thanks to [Facefusion](https://github.com/facefusion/facefusion). This project is based on facefusion to implenment a special version for ComfyUI.

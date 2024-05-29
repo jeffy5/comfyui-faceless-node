@@ -36,63 +36,63 @@ MODELS : ModelSet =\
     'codeformer':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/codeformer.onnx',
-        'path': resolve_relative_path('../../../models/faceless/codeformer.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/codeformer.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     },
     'gfpgan_1.2':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gfpgan_1.2.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gfpgan_1.2.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gfpgan_1.2.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     },
     'gfpgan_1.3':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gfpgan_1.3.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gfpgan_1.3.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gfpgan_1.3.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     },
     'gfpgan_1.4':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gfpgan_1.4.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gfpgan_1.4.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gfpgan_1.4.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     },
     'gpen_bfr_256':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gpen_bfr_256.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gpen_bfr_256.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gpen_bfr_256.onnx'),
         'template': 'arcface_128_v2',
         'size': (256, 256)
     },
     'gpen_bfr_512':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gpen_bfr_512.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gpen_bfr_512.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gpen_bfr_512.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     },
     'gpen_bfr_1024':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gpen_bfr_1024.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gpen_bfr_1024.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gpen_bfr_1024.onnx'),
         'template': 'ffhq_512',
         'size': (1024, 1024)
     },
     'gpen_bfr_2048':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/gpen_bfr_2048.onnx',
-        'path': resolve_relative_path('../../../models/faceless/gpen_bfr_2048.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/gpen_bfr_2048.onnx'),
         'template': 'ffhq_512',
         'size': (2048, 2048)
     },
     'restoreformer_plus_plus':
     {
         'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/restoreformer_plus_plus.onnx',
-        'path': resolve_relative_path('../../../models/faceless/restoreformer_plus_plus.onnx'),
+        'path': resolve_relative_path('../../../models/faceless/face_restoration/restoreformer_plus_plus.onnx'),
         'template': 'ffhq_512',
         'size': (512, 512)
     }

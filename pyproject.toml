@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-faceless-node"
-description = "Nodes:Load Video, Load Frames, Save Video, Face Swap, Face Restore, Face Swap (Video), Face Restore (Video)"
-version = "1.0.0"
+description = "A facefusion custom node for ComfyUI. Swap or restore faces for image or video"
+version = "0.1.0"
 license = "LICENSE"
 dependencies = ["filetype==1.2.0", "opencv-python==4.9.0.80", "ufile==3.2.9"]
 
@@ -10,6 +10,6 @@ Repository = "https://github.com/jeffy5/comfyui-faceless-node"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "jeffrey"
 DisplayName = "comfyui-faceless-node"
 Icon = ""

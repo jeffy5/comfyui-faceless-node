@@ -1,5 +1,5 @@
 from urllib.request import urlretrieve
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 from PIL import Image, ImageSequence, ImageOps
 import os
 import time
@@ -28,15 +28,19 @@ class NodesLoadImageUrl:
     def load_image_url(self, url):
         # Download image
         now = int(time.time())
+
+        temp_save_dir = os.path.join(folder_paths.get_temp_directory(), "faceless")
+        if not os.path.exists(temp_save_dir):
+            os.makedirs(temp_save_dir)
+        # get clean url path without query params
         u = urlparse(url)
+        temp_filename = os.path.join(temp_save_dir, f"{now}_{os.path.basename(u.path)}")
+        if url.isascii():
+            urlretrieve(url, temp_filename)
+        else:
+            urlretrieve(quote(url, safe=':/'), temp_filename)
 
-        output_path = os.path.join(folder_paths.get_temp_directory(), "faceless")
-        if not os.path.exists(output_path):
-            os.makedirs(output_path)
-        output_filename = os.path.join(output_path, f"{now}_{os.path.basename(u.path)}")
-        urlretrieve(url, output_filename)
-
-        img = Image.open(output_filename)
+        img = Image.open(temp_filename)
         images = []
         for i in ImageSequence.Iterator(img):
             i = ImageOps.exif_transpose(i)

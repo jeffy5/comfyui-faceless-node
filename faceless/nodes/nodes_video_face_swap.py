@@ -32,8 +32,6 @@ class NodesVideoFaceSwap:
             raise Exception("target video must be extracted frames")
         frames_dir = target_video["frames_dir"]
 
-        # TODO Check if has face on source image
-
         # Fetch source image or change process_frames argument.
         swap_video(source_image[0], frames_dir)
         return (target_video,)

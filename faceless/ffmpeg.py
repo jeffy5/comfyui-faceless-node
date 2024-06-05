@@ -11,7 +11,6 @@ def run_ffmpeg(args : List[str]):
     commands = [ 'ffmpeg', '-hide_banner', '-loglevel', 'error' ]
     commands.extend(args)
     process = subprocess.Popen(commands, stderr = subprocess.PIPE, stdout = subprocess.PIPE)
-    # TODO Make timeout be a option?
     code = process.wait(timeout = 300)
 
     if code != 0:
@@ -26,7 +25,6 @@ def run_ffmpeg(args : List[str]):
     return code == 0
 
 def extract_frames(video_path: str, frames_path: str, video_resolution : Resolution, video_fps : Fps, trim_frame_start : Optional[int] = None, trim_frame_end: Optional[int] = None, frame_format: FrameFormat = 'png') -> bool:
-    # TODO Get frame image format from options.
     temp_frames_pattern = get_temp_frames_pattern(frames_path, '%04d', frame_format)
     commands = [ '-hwaccel', 'auto', '-i', video_path, '-q:v', '0' ]
 

@@ -2,6 +2,7 @@ import os
 import shutil
 import hashlib
 from urllib.request import urlretrieve
+from urllib.parse import urlparse, quote
 
 import folder_paths
 
@@ -49,21 +50,27 @@ class NodesLoadVideoUrl:
         hash.update(url.encode('utf-8'))
         url_id = hash.hexdigest()
 
-        # TODO Get file ext from url
-        video_filepath = os.path.join(folder_paths.get_input_directory(), "faceless/download", f"{url_id}.mp4")
+        # get clean url path without query params
+        u = urlparse(url)
+        _, file_ext = os.path.splitext(os.path.basename(u.path))
+        if file_ext == "":
+            file_ext = ".mp4"
+        video_filepath = os.path.join(folder_paths.get_input_directory(), "faceless/download", f"{url_id}{file_ext}")
         if not os.path.exists(video_filepath):
             # Download video
-            download_temp_filepath = os.path.join(folder_paths.get_temp_directory(), "faceless/download", f"{url_id}.mp4")
+            download_temp_filepath = os.path.join(folder_paths.get_temp_directory(), "faceless/download", f"{url_id}{file_ext}")
             if not os.path.exists(os.path.dirname(download_temp_filepath)):
                 os.makedirs(os.path.dirname(download_temp_filepath))
 
-            urlretrieve(url, download_temp_filepath)
+            if url.isascii():
+                urlretrieve(url, download_temp_filepath)
+            else:
+                urlretrieve(quote(url, safe=':/'), download_temp_filepath)
 
+            # Save video
             if not os.path.exists(os.path.dirname(video_filepath)):
                 os.makedirs(os.path.dirname(video_filepath))
             shutil.move(download_temp_filepath, video_filepath)
-
-            # Save video
 
         video_name, _ = os.path.splitext(os.path.basename(video_filepath))
         frames_dir = os.path.join(folder_paths.get_temp_directory(), "faceless", video_name, "frames")

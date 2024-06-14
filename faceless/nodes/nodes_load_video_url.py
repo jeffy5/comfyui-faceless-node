@@ -1,6 +1,7 @@
 import os
 import shutil
 import hashlib
+import time
 from urllib.request import urlretrieve
 from urllib.parse import urlparse, quote
 
@@ -39,6 +40,14 @@ class NodesLoadVideoUrl:
                 }),
             },
         }
+
+    @classmethod
+    def IS_CHANGED(cls, url: str, extract_frames: bool, trim_frame_start: int, trim_frame_end: int):
+        # Cache will be handled internal, always return 
+        m = hashlib.sha256()
+        m.update(str(time.time()).encode('utf-8'))
+        print("load video url, is changed")
+        return m.digest().hex()
 
     CATEGORY = "faceless"
     RETURN_TYPES = ("FACELESS_VIDEO",)

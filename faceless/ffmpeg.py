@@ -58,7 +58,7 @@ def merge_frames(video_path: str, frames_dir: str, output_path: str, video_resol
     if output_video_encoder in [ 'h264_amf', 'hevc_amf' ]:
         output_video_compression = round(51 - (output_video_quality * 0.51))
         commands.extend([ '-qp_i', str(output_video_compression), '-qp_p', str(output_video_compression), '-quality', map_amf_preset(output_video_preset) ])
-    commands.extend([ '-vf', 'format=rgba,framerate=fps=' + str(video_fps), '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path ])
+    commands.extend([ '-vf', 'framerate=fps=' + str(video_fps), '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-y', output_path ])
     return run_ffmpeg(commands)
 
 # ffmpeg -i ~/Downloads/temp/bg.mp4 -framerate 30 -i %04d.png -filter_complex "[0:v]scale=528:960:force_original_aspect_ratio=increase,crop=528:960[bg];[1:v]format=rgba[overlay];[bg][overlay]overlay=shortest=1" -pix_fmt yuv420p -c:a copy output_final.mp4

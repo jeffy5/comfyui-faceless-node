@@ -1,3 +1,5 @@
+import torch
+
 from functools import lru_cache
 import subprocess
 import xml.etree.ElementTree as ElementTree
@@ -5,9 +7,11 @@ from typing import List, Any
 
 from .typing import ValueAndUnit, ExecutionDevice
 
-def apply_execution_provider_options(execution_providers: List[str]) -> List[Any]:
+def apply_execution_provider_options(execution_providers: List[str] | None = None) -> List[Any]:
     execution_providers_with_options : List[Any] = []
 
+    if execution_providers is None:
+        execution_providers = get_default_providers()
     for execution_provider in execution_providers:
         if execution_provider == 'CUDAExecutionProvider':
             execution_providers_with_options.append((execution_provider,
@@ -17,6 +21,13 @@ def apply_execution_provider_options(execution_providers: List[str]) -> List[Any
         else:
             execution_providers_with_options.append(execution_provider)
     return execution_providers_with_options
+
+def get_default_providers() -> List[str]:
+    if torch.cuda.is_available():
+        return ['CUDAExecutionProvider', 'CPUExecutionProvider']
+    elif torch.backends.mps.is_available():
+        return ['CoreMLExecutionProvider', 'CPUExecutionProvider']
+    return ['CPUExecutionProvider']
 
 
 def use_exhaustive() -> bool:

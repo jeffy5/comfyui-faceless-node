@@ -24,7 +24,6 @@ face_recognizer_model: Optional[FaceRecognizerModel] = 'arcface_inswapper'
 face_detector_score = 0.5
 face_landmarker_score = 0.5
 face_detector_size = '640x640'
-execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
 face_analyser_order: FaceAnalyserOrder = 'left-right'
 face_analyser_age: Optional[FaceAnalyserAge] = None
 face_analyser_gender: Optional[FaceAnalyserGender] = None
@@ -98,24 +97,24 @@ def get_face_analyser() -> Any:
     with THREAD_LOCK:
         if FACE_ANALYSER is None:
             if face_detector_model in [ 'many', 'retinaface' ]:
-                face_detectors['retinaface'] = onnxruntime.InferenceSession(MODELS['face_detector_retinaface']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_detectors['retinaface'] = onnxruntime.InferenceSession(MODELS['face_detector_retinaface']['path'], providers = apply_execution_provider_options())
             if face_detector_model in [ 'many', 'scrfd' ]:
-                face_detectors['scrfd'] = onnxruntime.InferenceSession(MODELS['face_detector_scrfd']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_detectors['scrfd'] = onnxruntime.InferenceSession(MODELS['face_detector_scrfd']['path'], providers = apply_execution_provider_options())
             if face_detector_model in [ 'many', 'yoloface' ]:
-                face_detectors['yoloface'] = onnxruntime.InferenceSession(MODELS['face_detector_yoloface']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_detectors['yoloface'] = onnxruntime.InferenceSession(MODELS['face_detector_yoloface']['path'], providers = apply_execution_provider_options())
             if face_detector_model in [ 'yunet' ]:
                 face_detectors['yunet'] = cv2.FaceDetectorYN.create(MODELS['face_detector_yunet']['path'], '', (0, 0))
             if face_recognizer_model == 'arcface_blendswap':
-                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_blendswap']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_blendswap']['path'], providers = apply_execution_provider_options())
             if face_recognizer_model == 'arcface_inswapper':
-                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_inswapper']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_inswapper']['path'], providers = apply_execution_provider_options())
             if face_recognizer_model == 'arcface_simswap':
-                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_simswap']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_simswap']['path'], providers = apply_execution_provider_options())
             if face_recognizer_model == 'arcface_uniface':
-                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_uniface']['path'], providers = apply_execution_provider_options(execution_providers))
-            face_landmarkers['68'] = onnxruntime.InferenceSession(MODELS['face_landmarker_68']['path'], providers = apply_execution_provider_options(execution_providers))
-            face_landmarkers['68_5'] = onnxruntime.InferenceSession(MODELS['face_landmarker_68_5']['path'], providers = apply_execution_provider_options(execution_providers))
-            gender_age = onnxruntime.InferenceSession(MODELS['gender_age']['path'], providers = apply_execution_provider_options(execution_providers))
+                face_recognizer = onnxruntime.InferenceSession(MODELS['face_recognizer_arcface_uniface']['path'], providers = apply_execution_provider_options())
+            face_landmarkers['68'] = onnxruntime.InferenceSession(MODELS['face_landmarker_68']['path'], providers = apply_execution_provider_options())
+            face_landmarkers['68_5'] = onnxruntime.InferenceSession(MODELS['face_landmarker_68_5']['path'], providers = apply_execution_provider_options())
+            gender_age = onnxruntime.InferenceSession(MODELS['gender_age']['path'], providers = apply_execution_provider_options())
             FACE_ANALYSER =\
             {
                 'face_detectors': face_detectors,

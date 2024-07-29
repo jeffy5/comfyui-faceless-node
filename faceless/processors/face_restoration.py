@@ -84,7 +84,6 @@ class FaceRestoration:
 
         self._execution_thread_count = 4
         self._execution_queue_count = 1
-        self._execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
 
         self._frame_processor = None
 
@@ -212,7 +211,7 @@ class FaceRestoration:
         with THREAD_LOCK:
             if self._frame_processor is None:
                 model_path = get_faceless_model_path('face_restoration', self._model_name)
-                self._frame_processor = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options(self._execution_providers))
+                self._frame_processor = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options())
         return self._frame_processor
 
     def _blend_frame(self, temp_vision_frame : VisionFrame, paste_vision_frame : VisionFrame) -> VisionFrame:

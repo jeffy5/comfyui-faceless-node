@@ -10,9 +10,6 @@ from .typing import FaceLandmark68, VisionFrame, Mask, Padding, FaceMaskRegion, 
 from .execution import apply_execution_provider_options
 from .filesystem import resolve_relative_path
 
-# TODO load from options
-execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
-
 FACE_OCCLUDER = None
 FACE_PARSER = None
 THREAD_LOCK : threading.Lock = threading.Lock()
@@ -50,7 +47,7 @@ def get_face_occluder() -> Any:
     with THREAD_LOCK:
         if FACE_OCCLUDER is None:
             model_path = MODELS['face_occluder']['path']
-            FACE_OCCLUDER = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options(execution_providers))
+            FACE_OCCLUDER = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options())
     return FACE_OCCLUDER
 
 
@@ -60,7 +57,7 @@ def get_face_parser() -> Any:
     with THREAD_LOCK:
         if FACE_PARSER is None:
             model_path = MODELS['face_parser']['path']
-            FACE_PARSER = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options(execution_providers))
+            FACE_PARSER = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options())
     return FACE_PARSER
 
 

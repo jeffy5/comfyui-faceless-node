@@ -86,7 +86,6 @@ class FaceSwapper:
 
         self._execution_queue_count = 1
         self._execution_thread_count = 4
-        self._execution_providers = ['CoreMLExecutionProvider', 'CPUExecutionProvider']
 
         self._frame_processor = None
         self._model_initializer = None
@@ -192,7 +191,7 @@ class FaceSwapper:
                 model_path = get_faceless_model_path('face_swapper', self._model_name)
                 if model_path is None:
                     raise Exception("can not get model path")
-                self._frame_processor = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options(self._execution_providers))
+                self._frame_processor = onnxruntime.InferenceSession(model_path, providers = apply_execution_provider_options())
         return self._frame_processor
 
     def _swap_face(self, source_face: Face, target_face: Face, source_vision_frame, target_vision_frame: VisionFrame) -> VisionFrame:

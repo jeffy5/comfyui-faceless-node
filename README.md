@@ -73,19 +73,19 @@ You can find same example workflows in directory `examples`.
 
 ![Image Face Swap And Face Restore](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/workflow_swap_image.jpg)
 
-[image_face_swap_and_restore.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/examples/image_face_swap_and_restore.json)
+[image_face_swap_and_restore.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/examples/image_face_swap_and_restore.json)
 
 ### Video face swap and face restore
 
 ![Video Face Swap And Face Restore](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/workflow_swap_video.jpg)
 
-[video_face_swap_and_restore.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/examples/video_face_swap_and_restore.json)
+[video_face_swap_and_restore.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/examples/video_face_swap_and_restore.json)
 
 ### Preview video frames
 
 ![Preview Video Frames](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/workflow_preview_video_frames.jpg)
 
-[preview_video_frames.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/.github/examples/preview_video_frames.json)
+[preview_video_frames.json](https://raw.githubusercontent.com/jeffy5/comfyui-faceless-node/main/examples/preview_video_frames.json)
 
 It doesn't support preview video for now. All video will be save in directory `output/faceless`.
 

@@ -7,7 +7,7 @@ import numpy as np
 from ..filesystem import is_image
 from ..typing import FacelessVideo
 
-class NodesLoadFrames:
+class NodesLoadVideoImages:
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -18,6 +18,7 @@ class NodesLoadFrames:
 
     CATEGORY = "faceless"
     RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("images",)
     FUNCTION = "load_frames"
 
     def load_frames(self, video: FacelessVideo):

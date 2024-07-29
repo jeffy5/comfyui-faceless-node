@@ -1,0 +1,229 @@
+{
+  "last_node_id": 9,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 8,
+      "type": "FacelessSaveVideo",
+      "pos": [
+        1752,
+        449
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "link": 7
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessSaveVideo"
+      }
+    },
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        327,
+        133
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "majic-girl.jpeg",
+        "image"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "FacelessLoadVideo",
+      "pos": [
+        386,
+        682
+      ],
+      "size": {
+        "0": 210,
+        "1": 154
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            10
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessLoadVideo"
+      },
+      "widgets_values": [
+        "pexels-girl.mp4",
+        true,
+        -1,
+        -1,
+        "image"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "FacelessVideoFaceRestore",
+      "pos": [
+        1275,
+        446
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            7
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessVideoFaceRestore"
+      },
+      "widgets_values": [
+        "gfpgan_1.4.onnx"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "FacelessVideoFaceSwap",
+      "pos": [
+        830,
+        443
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source_image",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "target_video",
+          "type": "FACELESS_VIDEO",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessVideoFaceSwap"
+      },
+      "widgets_values": [
+        "inswapper_128.onnx",
+        "yoloface_8n.onnx",
+        "arcface_w600k_r50.onnx"
+      ]
+    }
+  ],
+  "links": [
+    [
+      7,
+      7,
+      0,
+      8,
+      0,
+      "FACELESS_VIDEO"
+    ],
+    [
+      8,
+      6,
+      0,
+      7,
+      0,
+      "FACELESS_VIDEO"
+    ],
+    [
+      9,
+      1,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      9,
+      0,
+      6,
+      1,
+      "FACELESS_VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

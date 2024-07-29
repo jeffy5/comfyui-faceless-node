@@ -1,0 +1,273 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        327,
+        133
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "majic-girl.jpeg",
+        "image"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "FacelessVideoFaceSwap",
+      "pos": [
+        830,
+        443
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source_image",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "target_video",
+          "type": "FACELESS_VIDEO",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessVideoFaceSwap"
+      },
+      "widgets_values": [
+        "inswapper_128.onnx",
+        "yoloface_8n.onnx",
+        "arcface_w600k_r50.onnx"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "FacelessLoadVideo",
+      "pos": [
+        390,
+        680
+      ],
+      "size": {
+        "0": 210,
+        "1": 154
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            10
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessLoadVideo"
+      },
+      "widgets_values": [
+        "pexels-girl.mp4",
+        true,
+        -1,
+        2,
+        "image"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "FacelessVideoFaceRestore",
+      "pos": [
+        1275,
+        446
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "links": [
+            16
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessVideoFaceRestore"
+      },
+      "widgets_values": [
+        "gfpgan_1.4.onnx"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "FacelessLoadVideoImages",
+      "pos": [
+        1687,
+        443
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "FACELESS_VIDEO",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            17
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FacelessLoadVideoImages"
+      }
+    },
+    {
+      "id": 11,
+      "type": "PreviewImage",
+      "pos": [
+        1985,
+        442
+      ],
+      "size": [
+        210,
+        246
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    }
+  ],
+  "links": [
+    [
+      8,
+      6,
+      0,
+      7,
+      0,
+      "FACELESS_VIDEO"
+    ],
+    [
+      9,
+      1,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      9,
+      0,
+      6,
+      1,
+      "FACELESS_VIDEO"
+    ],
+    [
+      16,
+      7,
+      0,
+      15,
+      0,
+      "FACELESS_VIDEO"
+    ],
+    [
+      17,
+      15,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

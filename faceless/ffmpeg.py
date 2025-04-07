@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+import os
 import subprocess
 
 from .vision import pack_resolution, restrict_video_fps
@@ -7,8 +8,11 @@ from .vision import pack_resolution, restrict_video_fps
 from .typing import Fps, FrameFormat, OutputVideoEncoder, OutputVideoPreset, Resolution
 from .filesystem import get_temp_frames_pattern
 
+
 def run_ffmpeg(args : List[str]):
-    commands = [ 'ffmpeg', '-hide_banner', '-loglevel', 'error' ]
+
+    ffmpeg_path = os.environ.get("COMFYUI_FACELESS_FFMPEG") or "/usr/bin/ffmpeg"
+    commands = [ ffmpeg_path, '-hide_banner', '-loglevel', 'error' ]
     commands.extend(args)
     process = subprocess.Popen(commands, stderr = subprocess.PIPE, stdout = subprocess.PIPE)
     code = process.wait(timeout = 300)

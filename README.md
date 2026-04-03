@@ -37,7 +37,7 @@ All models is same as facefusion which can be found in [facefusion assets](https
 
 Now it will use the following models by default. In the future, dynamic model selection will be supported. Please download the model based on the directory structure.
 
-Put all into directory `CmofyUI/models/faceless`.
+Put all into directory `ComfyUI/models/faceless`.
 
 ```
 |-- face_detector
@@ -55,7 +55,7 @@ Put all into directory `CmofyUI/models/faceless`.
 `-- rmbg.pth
 ```
 
-You can download models by running `download_models.py` script under directory `CmofyUI/custom_nodes/comfyui-faceless-node`.
+You can download models by running `download_models.py` script under directory `ComfyUI/custom_nodes/comfyui-faceless-node`.
 
 ```bash
 # Install default required models
